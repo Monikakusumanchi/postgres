@@ -38,7 +38,7 @@ select * from users;  /this gave me the earlier data and this shows the persista
 CREATE TABLE sample_csv (
     Store int,
     Type char,
-    Size float,
+    Size float
 );
 
 docker exec -it container_id /bin/bash
@@ -68,3 +68,40 @@ SELECT *
 FROM "/data/features_data-set.csv"
 WITH CSV HEADER;
 COPY features_data FROM '/data/features_data-set.csv' WITH CSV HEADER;
+# ===============================================
+#adding volumes during runtime
+# this command creates a new container and starts it with the specified volumes
+docker-compose run -v /workspace/postgres/data:/data postgres  
+#copy data to the mongo db
+docker cp "/workspace/postgres/stores data-set.csv" 687:/docker-entrypoint-initdb.d/data.csv
+docker exec -it <mongo_container_id_or_name> bash
+#the mongoimport command to import the CSV file into MongoDB of specific database and collection names.
+mongoimport --db your_database --collection your_collection --type csv --file /docker-entrypoint-initdb.d/data.csv --headerline
+#to enter data to mongodb
+docker exec -it <mongo_container_id_or_name> mongosh
+// Create a new database
+use your_database
+
+// Create a collection in the current database
+db.createCollection("your_collection_name")
+
+// Switch to the newly created database
+use your_database
+
+// Insert a document into the collection
+db.your_collection_name.insert({
+  name: "John Doe",
+  age: 25,
+  city: "Example City"
+})
+
+// Show available databases
+show dbs
+
+// Show collections in the current database
+show collections
+
+// Find documents in the specific collection
+db.your_collection_name.find()
+
+
