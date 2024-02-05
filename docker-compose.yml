@@ -2,15 +2,15 @@ version: '3'
 
 services:
   postgres:
-    image: postgres
-    environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+    build:
+      context: ./postgres
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "5432:5432"  # Map PostgreSQL port
 
-volumes:
-  postgres_data:
+  python_app:
+    build:
+      context: ./python
+    ports:
+      - "80:80"  # Map the port used in the Python app container
+    depends_on:
+      - postgres  # Ensure PostgreSQL container is started first

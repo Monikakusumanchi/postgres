@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 db_url = 'postgresql://myuser:mypassword@postgres:5432/mydatabase'
 
 # Replace with the actual path to your CSV file inside the container
-csv_path = '/data/features_data-set.csv'
+csv_path = 'Features data set.csv'
 
 # Read CSV file into a Pandas DataFrame
 df = pd.read_csv(csv_path)
